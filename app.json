@@ -38,11 +38,27 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      [
+  "expo-location",
+  {
+    "locationAlwaysAndWhenInUsePermission": "Allow ISS Notifier to access your location.",
+    "locationWhenInUsePermission": "Allow ISS Notifier to access your location while using the app."
+  }
+]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     }
+
+    
+
+
+
+    
+
   }
 }
+
+
