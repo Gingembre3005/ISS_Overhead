@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useEffect } from 'react';
+import { Link } from "expo-router";
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import useLocation from '../hooks/useLocation';
-
-
 
 
 const RootLayout = () => {
@@ -20,8 +18,10 @@ useEffect(() => {
   getUserLocation();
 }, []);
   return (
+    
     <View style={styles.container}>
       <Text style={styles.moon}>Wesh le sang</Text>
+      <Link style={styles.moon} href = "/location"> location settings</Link>
       <Text style={styles.moon}>Actual location:</Text>
 <Text style={styles.moon}>
   City: {address?.city || "Loading..."}
@@ -44,6 +44,9 @@ useEffect(() => {
   Latitude: {latitude ?? "Loading..."}
 </Text>
 
+<Text style={styles.moon}>
+  Longitude: {longitude ?? "Loading..."}
+</Text>
 <Text style={styles.moon}>
   Longitude: {longitude ?? "Loading..."}
 </Text>
