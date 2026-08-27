@@ -1,65 +1,17 @@
 import { Link } from "expo-router";
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import useLocation from '../hooks/useLocation';
 
-
-const RootLayout = () => {
-
-  const {
-  latitude,
-  longitude,
-  errorMsg,
-  address,
-  getUserLocation,
-} = useLocation();
-
-useEffect(() => {
-  getUserLocation();
-}, []);
+const index = () => {
   return (
-    
     <View style={styles.container}>
-      <Text style={styles.moon}>Wesh le sang</Text>
+      <Text>index</Text>
       <Link style={styles.moon} href = "/location"> location settings</Link>
-      <Text style={styles.moon}>Actual location:</Text>
-<Text style={styles.moon}>
-  City: {address?.city || "Loading..."}
-</Text>
-
-<Text style={styles.moon}>
-  Region: {address?.region ?? "Loading..."}
-</Text>
-
-<Text style={styles.moon}>
-  Country: {address?.country ?? "Loading..."}
-</Text>
-
-<Text style={styles.moon}>
-  Postal Code: {address?.postalCode ?? "Loading..."}
-</Text>
-      
-
-<Text style={styles.moon}>
-  Latitude: {latitude ?? "Loading..."}
-</Text>
-
-<Text style={styles.moon}>
-  Longitude: {longitude ?? "Loading..."}
-</Text>
-<Text style={styles.moon}>
-  Longitude: {longitude ?? "Loading..."}
-</Text>
-
-{errorMsg ? (
-  <Text style={styles.moon}>{errorMsg}</Text>
-) : null}
     </View>
   )
 }
 
-export default RootLayout
-
+export default index
 
 const styles = StyleSheet.create({
     container: {
