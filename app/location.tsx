@@ -25,9 +25,9 @@ return (
       
       
 <Text style={styles.moon}>Actual location:</Text>
-<Button title="set location automaticly" onPress={()=>{getUserLocation; setShowText(true);}}/>
+<Button title="set location automaticly" onPress={()=>{getUserLocation(); setShowText(true);}}/>
 {showText&&(
-<text style= {styles.moon}>Setting Location, this may take a few seconds</text>
+<Text style= {styles.moon}>Setting Location, this may take a few seconds</Text>
 )}
 <Text style={styles.moon}>
   City: {address?.city || "Loading..."}
