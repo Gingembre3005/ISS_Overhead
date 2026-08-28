@@ -10,9 +10,12 @@ const tleLine2 = "..."
 const satres = satelitte.twoline2satrec(tleLine1,tleLine2)
 
 const Index = () => {
+  const { latitude, longitude } = useLocationContext();
   return (
     <View style={styles.container}>
-      <Text>index</Text>
+      <Text style={styles.moon}>index</Text>
+      <Text style={styles.moon}>Your latitude: {latitude}</Text>
+      <Text style={styles.moon}>Your longitude: {longitude }</Text>
       <Link style={styles.moon} href = "/location"> location settings</Link>
     </View>
   )

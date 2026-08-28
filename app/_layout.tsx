@@ -5,14 +5,15 @@ import { LocationProvider } from "../context/LocationContext";
 
 const _layout = () => {
   return (
+    <LocationProvider>
     <Stack>
 
       <Stack.Screen  name = "index" ></Stack.Screen>
       <Stack.Screen  name = "location" ></Stack.Screen>
-           <LocationProvider>   <Stack /></LocationProvider>
+          
     </Stack>
 
-
+        </LocationProvider>
     
   )
 }

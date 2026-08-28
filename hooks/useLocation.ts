@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 import * as Location from 'expo-location'
 import { useLocationContext } from "../context/LocationContext";
 
-const { setLocation } = useLocationContext();
+
 
 const useLocation = () => {
+  const { setLocation } = useLocationContext();
   const[errorMsg, setErrorMsg] = useState("")
   const [longitude, setLongitude] = useState<number | null>(null);
 const [latitude, setLatitude] = useState<number | null>(null);
