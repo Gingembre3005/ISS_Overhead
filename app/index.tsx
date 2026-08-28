@@ -1,8 +1,15 @@
 import { Link } from "expo-router";
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import * as satelitte from "satellite.js"
+import { useLocationContext } from "../context/LocationContext";
 
-const index = () => {
+const tleLine1 = "..."
+const tleLine2 = "..."
+
+const satres = satelitte.twoline2satrec(tleLine1,tleLine2)
+
+const Index = () => {
   return (
     <View style={styles.container}>
       <Text>index</Text>
@@ -11,7 +18,7 @@ const index = () => {
   )
 }
 
-export default index
+export default Index
 
 const styles = StyleSheet.create({
     container: {

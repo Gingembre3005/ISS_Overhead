@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router'
 import React from 'react'
 import { StyleSheet } from 'react-native'
+import { LocationProvider } from "../context/LocationContext";
 
 const _layout = () => {
   return (
@@ -8,8 +9,11 @@ const _layout = () => {
 
       <Stack.Screen  name = "index" ></Stack.Screen>
       <Stack.Screen  name = "location" ></Stack.Screen>
-      
+           <LocationProvider>   <Stack /></LocationProvider>
     </Stack>
+
+
+    
   )
 }
 

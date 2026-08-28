@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import * as Location from 'expo-location'
+import { useLocationContext } from "../context/LocationContext";
 
+const { setLocation } = useLocationContext();
 
 const useLocation = () => {
   const[errorMsg, setErrorMsg] = useState("")
@@ -22,10 +24,13 @@ const [latitude, setLatitude] = useState<number | null>(null);
     let {coords} = await Location.getCurrentPositionAsync()
     if (coords){
       const{longitude, latitude} = coords
-      
+  
+
+
       console.log("lat and long",latitude, longitude)
       setLatitude(latitude)
       setLongitude(longitude)
+      setLocation(latitude, longitude);
 
 
       let response = await Location.reverseGeocodeAsync({
