@@ -16,6 +16,7 @@ const Index = () => {
   const [error, setError] = useState<string | null>(null);
   const [issLatitude, setIsslatitude] = useState<number | null>(null)
   const [issLongitude, setIsslongitude] = useState<number | null>(null)
+  const [issElevation, setIssElevation] = useState<number | null>(null)
   useEffect(() => {
     const getISSData = async () => {
       try {
@@ -50,15 +51,30 @@ const Index = () => {
             throw new Error("could not calculate the position")
 
         }
+        const gmst = satelitte.gstime(now);
         const position = positionAndVellocity.position;
+        const ecf = satelitte.eciToEcf(position,gmst)
         if (!position || typeof position == "boolean"){
             throw new Error("could not calculate the position")
 
         }
-        const gmst = satelitte.gstime(now);
+        
         const geodetic = satelitte.eciToGeodetic(position,gmst);
+        if (latitude == null|| longitude == null){
+          console.log("Location was not set yet")
+          return
+        }
+        const observerGd = {
+            longitude: satelitte.degreesToRadians(longitude),
+            latitude: satelitte.degreesToRadians(latitude),
+            height: 0
+
+        }
         const isslatitude = satelitte.degreesLat(geodetic.latitude)
-        const isslongitude = satelitte.degreesLat(geodetic.longitude)
+        const isslongitude = satelitte.degreesLong(geodetic.longitude)
+        const lookAngle = satelitte.ecfToLookAngles(observerGd,ecf)
+        const elevation = satelitte.radiansToDegrees(lookAngle.elevation)
+        setIssElevation(elevation)
         setIsslatitude(isslatitude)
         setIsslongitude(isslongitude)
         console.log("Iss Latitude:", isslatitude);
@@ -103,6 +119,7 @@ const Index = () => {
       <Text style={styles.moon}>Your longitude: {longitude }</Text>
       <Text style={styles.moon}>ISS latitude: {issLatitude}</Text>
       <Text style={styles.moon}>ISS longitude: {issLongitude }</Text>
+      <Text style={styles.moon}>ISS elevation over the horizon: {issElevation }</Text>
       <Text style={styles.moon}>{loading 
         ? "Getting ISS data"
         : error
