@@ -2,11 +2,12 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 
 
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import useLocation from '../hooks/useLocation';
+import { useLocationContext } from "@/context/LocationContext";
 //import { Button } from "@react-navigation/elements";
 
-export default function Index() {
+export default function LocationScreen() {
 
 
   const {
@@ -17,7 +18,21 @@ export default function Index() {
   getUserLocation,
 } = useLocation();
 
+const [latitudeInput, setLatitudeInput] = useState("")
+const [longitudeInput, setLongitudeInput] = useState("")
 
+const {setLocation} = useLocationContext()
+
+const saveManuallLocation = ()=>{
+const lat = parseFloat(latitudeInput)
+const long = parseFloat(longitudeInput)
+if(Number.isNaN(lat)||Number.isNaN(long)||lat < -90||lat>90||long <-180||long>180){
+  Alert.alert("Invalid location","The location is invalid")
+  return
+}
+setLocation(lat,long)
+Alert.alert("Location saved","Location was saved")
+}
 
 const [showText, setShowText] = useState(false);
 return (
@@ -50,10 +65,21 @@ return (
 <Text style={styles.moon}>
   Latitude: {latitude ?? "Loading..."}
 </Text>
-
+< TextInput
+placeholder = "Manually set latitude"
+value={latitudeInput}
+onChangeText={setLatitudeInput}
+keyboardType="decimal-pad"
+/>
 <Text style={styles.moon}>
   Longitude: {longitude ?? "Loading..."}
 </Text>
+< TextInput
+placeholder = "Manually set longitude"
+value={longitudeInput}
+onChangeText={setLongitudeInput}
+keyboardType="decimal-pad"
+/>
 <Link style={styles.moon} href = "/"> Back to main screen</Link>
 
 
