@@ -18,6 +18,12 @@ const Index = () => {
   const [issLongitude, setIsslongitude] = useState<number | null>(null)
   const [issElevation, setIssElevation] = useState<number | null>(null)
   useEffect(() => {
+    if (latitude == null || longitude == null){
+      console.log("waiting for the location to be set")
+      return
+
+
+    }
     const getISSData = async () => {
       try {
         const response = await fetch(TLE_URL);
@@ -60,10 +66,7 @@ const Index = () => {
         }
         
         const geodetic = satelitte.eciToGeodetic(position,gmst);
-        if (latitude == null|| longitude == null){
-          console.log("Location was not set yet")
-          return
-        }
+        
         const observerGd = {
             longitude: satelitte.degreesToRadians(longitude),
             latitude: satelitte.degreesToRadians(latitude),
@@ -106,7 +109,7 @@ const Index = () => {
       };
       getISSData()
 
-    }, []);
+    }, [latitude,longitude]);
 
 
 

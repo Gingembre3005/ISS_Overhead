@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 
 
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert,Keyboard, Button, StyleSheet, Text,TouchableWithoutFeedback, TextInput, View } from 'react-native';
 import useLocation from '../hooks/useLocation';
 import { useLocationContext } from "@/context/LocationContext";
 //import { Button } from "@react-navigation/elements";
@@ -21,7 +21,9 @@ export default function LocationScreen() {
 const [latitudeInput, setLatitudeInput] = useState("")
 const [longitudeInput, setLongitudeInput] = useState("")
 
-const {setLocation} = useLocationContext()
+const {latitude: savedLatitude,
+       longitude: savedLongitude,
+       setLocation} = useLocationContext()
 
 const saveManuallLocation = ()=>{
 const lat = parseFloat(latitudeInput)
@@ -36,7 +38,7 @@ Alert.alert("Location saved","Location was saved")
 
 const [showText, setShowText] = useState(false);
 return (
-    
+<TouchableWithoutFeedback onPress={Keyboard.dismiss} >
 <View style={styles.container}>
       
       
@@ -63,22 +65,29 @@ return (
       
 
 <Text style={styles.moon}>
-  Latitude: {latitude ?? "Loading..."}
+  Latitude: {savedLatitude ?? "Loading..."}
 </Text>
-< TextInput
+< TextInput style={styles.manual}
 placeholder = "Manually set latitude"
 value={latitudeInput}
 onChangeText={setLatitudeInput}
 keyboardType="decimal-pad"
 />
 <Text style={styles.moon}>
-  Longitude: {longitude ?? "Loading..."}
+  Longitude: {savedLongitude ?? "Loading..."}
 </Text>
-< TextInput
+< TextInput style={styles.manual}
 placeholder = "Manually set longitude"
 value={longitudeInput}
 onChangeText={setLongitudeInput}
 keyboardType="decimal-pad"
+/>
+<Button
+title="manually save your location"
+onPress={()=>{
+  Keyboard.dismiss();
+  saveManuallLocation();
+}}
 />
 <Link style={styles.moon} href = "/"> Back to main screen</Link>
 
@@ -87,6 +96,7 @@ keyboardType="decimal-pad"
   <Text style={styles.moon}>{errorMsg}</Text>
 ) : null}
     </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -100,7 +110,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-
+    manual: {
+        width: 280,
+        height: 50,
+        backgroundColor: "#1e1e1e",
+        borderColor: "white",
+        borderWidth: 1,
+        borderRadius: 10,
+        color: "white",
+        paddingHorizontal: 15,
+        fontSize: 16,
+        marginBottom: 15, 
+},
 
     moon: {
 
