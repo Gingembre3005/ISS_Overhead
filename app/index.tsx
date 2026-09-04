@@ -9,7 +9,7 @@ const TLE_URL = "https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=
 
 const Index = () => {
   const { latitude, longitude } = useLocationContext();
-
+  const [satrec, setSatrec] = useState<any>(null);
   const [tleLine1, setTleLine1] = useState<string | null>(null);
   const [tleLine2, setTleLine2] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -17,13 +17,8 @@ const Index = () => {
   const [issLatitude, setIsslatitude] = useState<number | null>(null)
   const [issLongitude, setIsslongitude] = useState<number | null>(null)
   const [issElevation, setIssElevation] = useState<number | null>(null)
-  useEffect(() => {
-    if (latitude == null || longitude == null){
-      console.log("waiting for the location to be set")
-      return
-
-
-    }
+  useEffect(()=>{
+     
     const getISSData = async () => {
       try {
         const response = await fetch(TLE_URL);
@@ -49,7 +44,69 @@ const Index = () => {
         }
         setTleLine1(line1);
         setTleLine2(line2);
-        const satrec = satelitte.twoline2satrec(line1, line2);
+        const newsatrec = satelitte.twoline2satrec(line1, line2);
+        setSatrec(newsatrec)
+        } catch (err){
+        console.error(err)
+        if(err instanceof Error){
+
+          setError(err.message)
+        }else{
+
+          setError("unknow error")
+        }
+
+
+      }finally{
+
+        setLoading(false)
+      }
+      };
+      getISSData()
+
+    
+  },[])
+  useEffect(() => {
+        if(satrec === null ||
+          latitude === null ||
+          longitude === null
+        ){
+          console.log("Waiting for something...")
+          return
+        }
+
+        const getISSElevation = (date: Date) =>{
+        const positionAndVelocity = satelitte.propagate(
+        satrec,
+        date
+        )
+        if(
+          !positionAndVelocity?.position || typeof positionAndVelocity.position === "boolean"
+
+        ){
+        return null;
+        }
+        const positionPass = positionAndVelocity.position
+        const gmstP = satelitte.gstime(date)
+
+        const ecf = satelitte.eciToEcf(positionPass, gmstP)
+
+        const observerGdP = {
+          longitude: satelitte.degreesToRadians(longitude),
+          latitude: satelitte.degreesToRadians(latitude),
+          height: 0
+
+        }
+        const lookAngle = satelitte.ecfToLookAngles(
+          observerGdP,
+          ecf
+        )
+        return satelitte.radiansToDegrees(
+          lookAngle.elevation
+        )
+        }
+        // loop here 
+
         const updateISSposition = () => {
         const now = new Date();
         const positionAndVellocity = satelitte.propagate(satrec,now);
@@ -59,11 +116,12 @@ const Index = () => {
         }
         const gmst = satelitte.gstime(now);
         const position = positionAndVellocity.position;
-        const ecf = satelitte.eciToEcf(position,gmst)
         if (!position || typeof position == "boolean"){
             throw new Error("could not calculate the position")
 
         }
+        const ecf = satelitte.eciToEcf(position,gmst)
+        
         
         const geodetic = satelitte.eciToGeodetic(position,gmst);
         
@@ -91,25 +149,16 @@ const Index = () => {
         return () => {
         clearInterval(interval);
         };
-      } catch (err){
-        console.error(err)
-        if(err instanceof Error){
+      
+      
 
-          setError(err.message)
-        }else{
-
-          setError("unknow error")
-        }
+      
 
 
-      }finally{
 
-        setLoading(false)
-      }
-      };
-      getISSData()
 
-    }, [latitude,longitude]);
+
+    }, [latitude,longitude,satrec]);
 
 
 

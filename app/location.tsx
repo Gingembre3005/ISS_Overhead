@@ -37,6 +37,8 @@ Alert.alert("Location saved","Location was saved")
 }
 
 const [showText, setShowText] = useState(false);
+
+
 return (
 <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
 <View style={styles.container}>
@@ -71,7 +73,7 @@ return (
 placeholder = "Manually set latitude"
 value={latitudeInput}
 onChangeText={setLatitudeInput}
-keyboardType="decimal-pad"
+keyboardType="numbers-and-punctuation"
 />
 <Text style={styles.moon}>
   Longitude: {savedLongitude ?? "Loading..."}
@@ -80,7 +82,7 @@ keyboardType="decimal-pad"
 placeholder = "Manually set longitude"
 value={longitudeInput}
 onChangeText={setLongitudeInput}
-keyboardType="decimal-pad"
+keyboardType="numbers-and-punctuation"
 />
 <Button
 title="manually save your location"
