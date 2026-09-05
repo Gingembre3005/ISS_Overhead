@@ -18,6 +18,7 @@ const Index = () => {
   const [issLongitude, setIsslongitude] = useState<number | null>(null)
   const [issElevation, setIssElevation] = useState<number | null>(null)
   const [nextPassTime, setNextPassTime] = useState<Date | null>(null)
+  const [nextPassTimeEnd, setNextPassTimeEnd] = useState<Date | null>(null)
   useEffect(()=>{
      
     const getISSData = async () => {
@@ -110,11 +111,12 @@ const Index = () => {
         const now = new Date()
 
         let previousElevation = getISSElevation(now)
+        let foundPassStart: Date | null = null
 
-        for(let minutes = 1; minutes <= 24 * 60 ; minutes++){
+        for(let seconds = 10; seconds <= 24 * 60*60 ; seconds+= 10){
           
           const futureDate = new Date(
-            now.getTime() + minutes * 60 *1000
+            now.getTime() + seconds *1000
           )
           const currentElevation = getISSElevation(futureDate)
 
@@ -127,10 +129,47 @@ const Index = () => {
               console.log("pass time:", futureDate)
 
               setNextPassTime(futureDate)
+              foundPassStart = futureDate
               break
             }
             previousElevation = currentElevation
         }
+          if(foundPassStart !== null){
+         
+          
+        for(let seconds = 10; seconds <= 24*60*60; seconds+= 10){
+          let previousEndElevation = getISSElevation(foundPassStart)
+          if (previousEndElevation == null){
+            console.log("previousEnd is null somehow")
+            break
+
+          }
+         
+          const DateFuture = new Date(
+            foundPassStart.getTime() + seconds*1000
+
+          )
+
+          const calcElevation = getISSElevation(DateFuture)
+          if (calcElevation == null){
+            console.log("calcElevation is null")
+            break
+          }
+
+          if ( calcElevation < 0 && previousEndElevation >= 0){
+            console.log("End of next pass was found")
+            console.log("end of pass time:", DateFuture)
+
+            setNextPassTimeEnd(DateFuture)
+            break
+
+          }
+
+
+
+            previousEndElevation = calcElevation
+        }
+      }
 
         const updateISSposition = () => {
         const now = new Date();
