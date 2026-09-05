@@ -17,6 +17,7 @@ const Index = () => {
   const [issLatitude, setIsslatitude] = useState<number | null>(null)
   const [issLongitude, setIsslongitude] = useState<number | null>(null)
   const [issElevation, setIssElevation] = useState<number | null>(null)
+  const [nextPassTime, setNextPassTime] = useState<Date | null>(null)
   useEffect(()=>{
      
     const getISSData = async () => {
@@ -105,7 +106,31 @@ const Index = () => {
           lookAngle.elevation
         )
         }
-        // loop here 
+        // loop  for searching next pass
+        const now = new Date()
+
+        let previousElevation = getISSElevation(now)
+
+        for(let minutes = 1; minutes <= 24 * 60 ; minutes++){
+          
+          const futureDate = new Date(
+            now.getTime() + minutes * 60 *1000
+          )
+          const currentElevation = getISSElevation(futureDate)
+
+          if(
+            previousElevation !== null &&
+            currentElevation !== null&&
+            previousElevation <= 0 &&
+            currentElevation > 0){
+              console.log("next pass was found")
+              console.log("pass time:", futureDate)
+
+              setNextPassTime(futureDate)
+              break
+            }
+            previousElevation = currentElevation
+        }
 
         const updateISSposition = () => {
         const now = new Date();
