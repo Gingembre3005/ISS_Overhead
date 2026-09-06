@@ -134,11 +134,12 @@ const Index = () => {
             }
             previousElevation = currentElevation
         }
+          let foundPassEnd: Date | null = null
           if(foundPassStart !== null){
-         
+         let previousEndElevation = getISSElevation(foundPassStart)
           
         for(let seconds = 10; seconds <= 24*60*60; seconds+= 10){
-          let previousEndElevation = getISSElevation(foundPassStart)
+          
           if (previousEndElevation == null){
             console.log("previousEnd is null somehow")
             break
@@ -160,6 +161,7 @@ const Index = () => {
             console.log("End of next pass was found")
             console.log("end of pass time:", DateFuture)
 
+            foundPassEnd = DateFuture
             setNextPassTimeEnd(DateFuture)
             break
 
@@ -169,6 +171,31 @@ const Index = () => {
 
             previousEndElevation = calcElevation
         }
+      }
+
+      if (foundPassEnd!== null && foundPassStart !== null && nextPassTime !== null && nextPassTimeEnd !== null){
+        let maxElevation = 0
+        for (let seconds = 10; seconds <= 24*60*60; seconds +=10){
+          const checkDate= new Date (foundPassStart.getTime() + seconds*1000)
+          const checkElevation = getISSElevation(checkDate)
+          if(checkDate > foundPassEnd){
+            console.log("MaxElevation during pass:", maxElevation)
+            break
+          }
+          
+          if( checkElevation !== null && checkElevation > maxElevation)  {
+            maxElevation = checkElevation
+
+          }
+        
+
+
+        }
+
+
+
+
+
       }
 
         const updateISSposition = () => {
@@ -236,6 +263,16 @@ const Index = () => {
       <Text style={styles.moon}>ISS latitude: {issLatitude}</Text>
       <Text style={styles.moon}>ISS longitude: {issLongitude }</Text>
       <Text style={styles.moon}>ISS elevation over the horizon: {issElevation }</Text>
+      
+      <Text style={styles.moon}>Start of next pass: {
+      nextPassTime
+      ?nextPassTime.toLocaleString()
+      : "calculating..."}</Text>
+      <Text style={styles.moon}>End of next pass:{
+      nextPassTimeEnd
+      ?nextPassTimeEnd.toLocaleString()
+      :"calculating..."}</Text>
+      
       <Text style={styles.moon}>{loading 
         ? "Getting ISS data"
         : error
