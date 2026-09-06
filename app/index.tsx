@@ -19,6 +19,9 @@ const Index = () => {
   const [issElevation, setIssElevation] = useState<number | null>(null)
   const [nextPassTime, setNextPassTime] = useState<Date | null>(null)
   const [nextPassTimeEnd, setNextPassTimeEnd] = useState<Date | null>(null)
+  const [MaxMaxElevation, setMaxElevation] = useState<number | null>(null)
+  const [MaxMaxElevationTime, setMaxElevationTime] = useState<Date | null>(null)
+  const [TimeUntilNextPass, setTimeUntilNextPass] = useState<number | null>(null)
   useEffect(()=>{
      
     const getISSData = async () => {
@@ -130,6 +133,7 @@ const Index = () => {
 
               setNextPassTime(futureDate)
               foundPassStart = futureDate
+              
               break
             }
             previousElevation = currentElevation
@@ -175,6 +179,7 @@ const Index = () => {
 
       if (foundPassEnd!== null && foundPassStart !== null ){
         let maxElevation = 0
+        let maxElevationTime = new Date(foundPassStart.getTime())
         for (let seconds = 10; seconds <= 24*60*60; seconds +=10){
           const checkDate= new Date (foundPassStart.getTime() + seconds*1000)
           const checkElevation = getISSElevation(checkDate)
@@ -185,13 +190,17 @@ const Index = () => {
           
           if( checkElevation !== null && checkElevation > maxElevation)  {
             maxElevation = checkElevation
+            maxElevationTime = checkDate 
 
           }
         
 
 
         }
+        setMaxElevation(maxElevation)
+        setMaxElevationTime (maxElevationTime)
         console.log("MaxElevation during pass:", maxElevation)
+        console.log("at:", maxElevationTime)
         
 
 
@@ -238,6 +247,16 @@ const Index = () => {
         const interval = setInterval(
           updateISSposition,5000
         )
+        const nextPassMathInterval = setInterval(()=>{
+          if(foundPassStart != null){
+          const timetonextpass = foundPassStart.getTime() - now.getTime()
+          setTimeUntilNextPass(Math.max(0,timetonextpass))
+          const totalseconds = Math.floor((timetonextpass ?? 0)/1000)
+
+          const hours = 
+
+          }
+        },1000)
         return () => {
         clearInterval(interval);
         };
@@ -273,7 +292,8 @@ const Index = () => {
       nextPassTimeEnd
       ?nextPassTimeEnd.toLocaleString()
       :"calculating..."}</Text>
-      
+      <Text style={styles.moon}>Highest point during pass at: {MaxMaxElevation} degrees over the horizon</Text>
+      <Text style = {styles.moon}> Highest point will be reached at: {MaxMaxElevationTime?.toLocaleString()}</Text>
       <Text style={styles.moon}>{loading 
         ? "Getting ISS data"
         : error
