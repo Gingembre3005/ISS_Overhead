@@ -173,13 +173,13 @@ const Index = () => {
         }
       }
 
-      if (foundPassEnd!== null && foundPassStart !== null && nextPassTime !== null && nextPassTimeEnd !== null){
+      if (foundPassEnd!== null && foundPassStart !== null ){
         let maxElevation = 0
         for (let seconds = 10; seconds <= 24*60*60; seconds +=10){
           const checkDate= new Date (foundPassStart.getTime() + seconds*1000)
           const checkElevation = getISSElevation(checkDate)
           if(checkDate > foundPassEnd){
-            console.log("MaxElevation during pass:", maxElevation)
+            
             break
           }
           
@@ -191,7 +191,8 @@ const Index = () => {
 
 
         }
-
+        console.log("MaxElevation during pass:", maxElevation)
+        
 
 
 
