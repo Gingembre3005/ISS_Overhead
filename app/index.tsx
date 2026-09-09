@@ -249,14 +249,16 @@ const Index = () => {
         )
         const nextPassMathInterval = setInterval(()=>{
           if(foundPassStart != null){
-          const timetonextpass = foundPassStart.getTime() - now.getTime()
+          const currentTime = new Date()
+          const timetonextpass = foundPassStart.getTime() - currentTime.getTime()
           setTimeUntilNextPass(Math.max(0,timetonextpass))
-          const totalseconds = Math.floor((timetonextpass ?? 0)/1000)
+          
 
-          const hours = 
+          
 
           }
         },1000)
+        
         return () => {
         clearInterval(interval);
         };
@@ -271,8 +273,10 @@ const Index = () => {
 
     }, [latitude,longitude,satrec]);
 
-
-
+  const totalseconds = Math.floor((TimeUntilNextPass ?? 0)/1000)
+  const hours = Math.floor(totalseconds / 3600)
+  const minutes = Math.floor((totalseconds % 3600)/60)
+  const seconds = totalseconds % 60
   
 
   return (
@@ -283,6 +287,7 @@ const Index = () => {
       <Text style={styles.moon}>ISS latitude: {issLatitude}</Text>
       <Text style={styles.moon}>ISS longitude: {issLongitude }</Text>
       <Text style={styles.moon}>ISS elevation over the horizon: {issElevation }</Text>
+      <Text style={styles.moon}>Start of next ISS pass in: {hours}hours {minutes}minutes {seconds}seconds</Text>
       
       <Text style={styles.moon}>Start of next pass: {
       nextPassTime
