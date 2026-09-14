@@ -1,8 +1,10 @@
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet,ScrollView, Text, View } from 'react-native';
 import * as satelitte from "satellite.js"
 import { useLocationContext } from "../context/LocationContext";
 import React, {useEffect, useState} from "react";
+import { Orbitron_400Regular, Orbitron_700Bold} from "@expo-google-fonts/orbitron";
+import { useFonts} from "expo-font"
 
 const TLE_URL = "https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=TLE";
 
@@ -261,6 +263,7 @@ const Index = () => {
         
         return () => {
         clearInterval(interval);
+        clearInterval(nextPassMathInterval)
         };
       
       
@@ -278,27 +281,49 @@ const Index = () => {
   const minutes = Math.floor((totalseconds % 3600)/60)
   const seconds = totalseconds % 60
   
-
+  const [fontsLoaded] = useFonts({
+    Orbitron: Orbitron_400Regular,
+    ObitronBold: Orbitron_700Bold,
+    DSEG7: require("../assets/fonts/DSEG7ModernMini-Bold.ttf")
+  })
+  
+  if(!fontsLoaded){
+    return(
+      <View style={styles.container}>
+        <Text style={styles.moon}>Loading</Text>
+      </View>
+    )
+  }
   return (
-    <View style={styles.container}>
-      <Text style={styles.moon}>index</Text>
-      <Text style={styles.moon}>Your latitude: {latitude}</Text>
-      <Text style={styles.moon}>Your longitude: {longitude }</Text>
-      <Text style={styles.moon}>ISS latitude: {issLatitude}</Text>
-      <Text style={styles.moon}>ISS longitude: {issLongitude }</Text>
-      <Text style={styles.moon}>ISS elevation over the horizon: {issElevation }</Text>
-      <Text style={styles.moon}>Start of next ISS pass in: {hours}hours {minutes}minutes {seconds}seconds</Text>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
+      <Text style={styles.moon}>User coordinates:</Text>
+      <Text style={styles.moon}>-------------------</Text>
+      <Text style={styles.moon}>Your latitude: <Text style={styles.countdown}>{latitude?.toFixed(2)}</Text></Text>
+      <Text style={styles.moon}>Your longitude: <Text style={styles.countdown}>{longitude?.toFixed(2) }</Text></Text>
+      <Text>  </Text>
+      <Text style={styles.moon}>ISS coordinates:</Text>
+      <Text style={styles.moon}>-------------------</Text>
+      <Text style={styles.moon}>ISS latitude: <Text style={styles.countdown}>{issLatitude?.toFixed(2)}</Text></Text>
+      <Text style={styles.moon}>ISS longitude: <Text style={styles.countdown}>{issLongitude?.toFixed(2) }</Text></Text>
+      <Text style={styles.moon}>ISS elevation over the horizon: <Text style={styles.countdown}>{MaxMaxElevation?.toFixed(1)}</Text></Text>
+      <Text>   </Text>
+      <Text style={styles.moon}>Informations about next ISS pass:</Text>
+      <Text style={styles.moon}>-------------------</Text>
+      <Text style={styles.moon}>Start of next ISS pass in: <Text style={styles.countdown}>
+        {hours.toString().padStart(2,"0")}:
+        {minutes.toString().padStart(2,"0")}:
+        {seconds.toString().padStart(2,"0")}</Text></Text>
       
       <Text style={styles.moon}>Start of next pass: {
       nextPassTime
-      ?nextPassTime.toLocaleString()
+      ?<Text style={styles.countdown}> {nextPassTime.toLocaleString()} </Text>
       : "calculating..."}</Text>
       <Text style={styles.moon}>End of next pass:{
       nextPassTimeEnd
-      ?nextPassTimeEnd.toLocaleString()
+      ?<Text style = {styles.countdown}>{nextPassTimeEnd.toLocaleString()}</Text>
       :"calculating..."}</Text>
-      <Text style={styles.moon}>Highest point during pass at: {MaxMaxElevation} degrees over the horizon</Text>
-      <Text style = {styles.moon}> Highest point will be reached at: {MaxMaxElevationTime?.toLocaleString()}</Text>
+      <Text style={styles.moon}>Highest point during pass at: <Text style={styles.countdown}>{MaxMaxElevation?.toFixed(1)}</Text> degrees over the horizon</Text>
+      <Text style = {styles.moon}> Highest point will be reached at: <Text style={styles.countdown}>{MaxMaxElevationTime?.toLocaleString()}</Text></Text>
       <Text style={styles.moon}>{loading 
         ? "Getting ISS data"
         : error
@@ -313,7 +338,7 @@ const Index = () => {
         </>
       )}</Text>*/}
       <Link style={styles.moon} href = "/location"> location settings</Link>
-    </View> 
+    </ScrollView> 
   )
 }
 
@@ -321,27 +346,34 @@ export default Index
 
 const styles = StyleSheet.create({
     container: {
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start'
+    },
+    scrollView: {
         flex: 1,
         backgroundColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center'
+        
     },
 
 
     moon: {
 
     
-
-        color: 'white'
+        fontSize: 22,
+        color: 'white',
+        fontFamily: "Orbitron",
+        letterSpacing: 2
 
     },
-    test: {
+    countdown: {
 
     
         
-        color: 'white',
-        alignItems: 'center',
-        justifyContent: 'center'
+      color: 'white',
+      fontFamily: "DSEG7",
+      fontSize: 22,
+      letterSpacing: 2,
+      textAlign: "center",
 
     }
 
