@@ -5,10 +5,12 @@ import { LocationProvider } from "../context/LocationContext";
 
 const _layout = () => {
   return (
+    
     <LocationProvider>
-    <Stack>
-
-      <Stack.Screen  name = "index" ></Stack.Screen>
+    
+    <Stack screenOptions={{ headerShown: false}}>
+      
+      <Stack.Screen  name = "index"  ></Stack.Screen>
       <Stack.Screen  name = "location" ></Stack.Screen>
           
     </Stack>

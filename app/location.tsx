@@ -45,7 +45,7 @@ return (
       
       
 <Text style={styles.moon}>Actual location:</Text>
-<Button title="set location automaticly" onPress={()=>{getUserLocation(); setShowText(true);}}/>
+
 <Pressable
 style={({ pressed }) => [
   styles.coolButton,
@@ -109,13 +109,10 @@ value={longitudeInput}
 onChangeText={setLongitudeInput}
 keyboardType="numbers-and-punctuation"
 />
-<Button
-title="manually save your location"
-onPress={()=>{
-  Keyboard.dismiss();
-  saveManuallLocation();
-}}
-/>
+
+<Text style={styles.attention}>
+  Don't forget to save!
+</Text>
 
 <Pressable 
 style={({pressed}) => [
@@ -218,6 +215,12 @@ const styles = StyleSheet.create({
         color: 'white',
         letterSpacing: 2
 
+    },
+    attention:{
+      fontFamily: "Orbitron",
+      fontSize: 22,
+      color: 'red',
+      letterSpacing: 2
     },
     test: {
 

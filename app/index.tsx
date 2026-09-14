@@ -5,6 +5,7 @@ import { useLocationContext } from "../context/LocationContext";
 import React, {useEffect, useState} from "react";
 import { Orbitron_400Regular, Orbitron_700Bold} from "@expo-google-fonts/orbitron";
 import { useFonts} from "expo-font"
+import { StatusBar } from "expo-status-bar"
 
 const TLE_URL = "https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=TLE";
 
@@ -296,6 +297,7 @@ const Index = () => {
   }
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
+      
       <Text style={styles.moon}>User coordinates:</Text>
       <Text style={styles.moon}>-------------------</Text>
       <Text style={styles.moon}>Your latitude: <Text style={styles.countdown}>{latitude?.toFixed(2)}</Text></Text>
