@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 
 
-import { Alert,Keyboard, Button, StyleSheet, Text,TouchableWithoutFeedback, TextInput, View } from 'react-native';
+import {Pressable, Alert,Keyboard, Button, StyleSheet, Text,TouchableWithoutFeedback, TextInput, View } from 'react-native';
 import useLocation from '../hooks/useLocation';
 import { useLocationContext } from "@/context/LocationContext";
 //import { Button } from "@react-navigation/elements";
@@ -46,28 +46,53 @@ return (
       
 <Text style={styles.moon}>Actual location:</Text>
 <Button title="set location automaticly" onPress={()=>{getUserLocation(); setShowText(true);}}/>
+<Pressable
+style={({ pressed }) => [
+  styles.coolButton,
+  pressed && styles.coolButtonPressed,
+]}
+onPress={() => {
+  getUserLocation(); setShowText(true);
+  
+}}>
+  <Text style={styles.coolButtonText}>set location automatically</Text>
+</Pressable>
 {showText&&(
 <Text style= {styles.moon}>Setting Location, this may take a few seconds</Text>
 )}
+
+{address?.country && (
 <Text style={styles.moon}>
-  City: {address?.city || "Loading..."}
-</Text>
+  Country: {address.country }
+</Text>)}
+
+{address?.region && (
+<Text style={styles.moon}>
+  Region: {address.region }
+</Text>)}
+
+{address?.city && (
+<Text style={styles.moon}>
+  City: {address.city}
+</Text>)}
+
+{address?.postalCode && (
+<Text style={styles.moon}>
+  Postal Code: {address.postalCode }
+</Text>)}
+
+{address?.street && (
+<Text style={styles.moon}>
+  Street: {address.street}
+</Text>)}
+
+{address?.streetNumber && (      
+<Text style={styles.moon}>
+  Streetnumber: {address.streetNumber }
+</Text>)}
 
 <Text style={styles.moon}>
-  Region: {address?.region ?? "Loading..."}
-</Text>
-
-<Text style={styles.moon}>
-  Country: {address?.country ?? "Loading..."}
-</Text>
-
-<Text style={styles.moon}>
-  Postal Code: {address?.postalCode ?? "Loading..."}
-</Text>
-      
-
-<Text style={styles.moon}>
-  Latitude: {savedLatitude ?? "Loading..."}
+  Latitude: {savedLatitude ?? "Waiting for it to be set..."}
 </Text>
 < TextInput style={styles.manual}
 placeholder = "Manually set latitude"
@@ -76,7 +101,7 @@ onChangeText={setLatitudeInput}
 keyboardType="numbers-and-punctuation"
 />
 <Text style={styles.moon}>
-  Longitude: {savedLongitude ?? "Loading..."}
+  Longitude: {savedLongitude ?? "Waiting for it to be set..."}
 </Text>
 < TextInput style={styles.manual}
 placeholder = "Manually set longitude"
@@ -91,7 +116,27 @@ onPress={()=>{
   saveManuallLocation();
 }}
 />
-<Link style={styles.moon} href = "/"> Back to main screen</Link>
+
+<Pressable 
+style={({pressed}) => [
+  styles.coolButton,
+  pressed && styles.coolButtonPressed,
+
+]}
+onPress={()=>{
+  Keyboard.dismiss();
+  saveManuallLocation();
+}}>
+  <Text style={styles.coolButtonText}>manually save your location</Text>
+
+
+</Pressable>
+
+<View style={styles.buttonContainer}>
+
+<Link style={styles.ButtonStyle} href = "/"> <Text style={styles.moon}>Back to main screen</Text></Link>
+
+</View>
 
 
 {errorMsg ? (
@@ -109,8 +154,49 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start'
+    },
+    coolButtonPressed: {
+      opacity: 0.5,
+      transform: [{ scale: 0.97}],
+    },
+    coolButton: {
+      width: 260,
+      alignSelf: "flex-start",
+      marginTop: 30,
+      paddingVertical: 16,
+      borderWidth: 1,
+      borderColor: "white",
+      borderRadius: 4,
+      alignItems: "center",
+      justifyContent: "center"
+
+    },
+    coolButtonText: {
+      fontFamily: "Orbitron",
+      fontSize: 15,
+      color: "white",
+      letterSpacing: 2,
+      textAlign: "center"
+
+    },
+    buttonContainer: {
+      width: "100%",
+      alignItems: "center"
+    },
+    ButtonStyle: {
+      marginTop: 35,
+      width: 250,
+      paddingVertical: 16,
+      borderWidth: 1,
+      borderColor: "white",
+      borderRadius: 3,
+      textAlign: "center",
+      fontFamily: "Orbitron",
+      fontSize: 15,
+      color: "white",
+      letterSpacing: 2,
     },
     manual: {
         width: 280,
@@ -127,9 +213,10 @@ const styles = StyleSheet.create({
 
     moon: {
 
-    
-
-        color: 'white'
+        fontFamily: "Orbitron",
+        fontSize: 22,
+        color: 'white',
+        letterSpacing: 2
 
     },
     test: {

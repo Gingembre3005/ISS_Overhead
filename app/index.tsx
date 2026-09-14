@@ -323,11 +323,15 @@ const Index = () => {
       ?<Text style = {styles.countdown}>{nextPassTimeEnd.toLocaleString()}</Text>
       :"calculating..."}</Text>
       <Text style={styles.moon}>Highest point during pass at: <Text style={styles.countdown}>{MaxMaxElevation?.toFixed(1)}</Text> degrees over the horizon</Text>
-      <Text style = {styles.moon}> Highest point will be reached at: <Text style={styles.countdown}>{MaxMaxElevationTime?.toLocaleString()}</Text></Text>
-      <Text style={styles.moon}>{loading 
+      <Text style = {styles.moon}>Highest point will be reached at: <Text style={styles.countdown}>{MaxMaxElevationTime?.toLocaleString()}</Text></Text>
+      <Text>    </Text>
+      <Text style={styles.moon}>ISS data status:</Text>
+      <Text style={styles.moon}>-------------------</Text>
+      <Text style={styles.dataLoaded}>{loading 
         ? "Getting ISS data"
         : error
-        ? `Error : ${error}`
+        ? `Error : ${error} 
+Try again in a few hours`
         : "ISS Data Loaded"}</Text>
      {/* <Text style={styles.moon}>{!loading && !error && (
         <>
@@ -337,7 +341,9 @@ const Index = () => {
         
         </>
       )}</Text>*/}
-      <Link style={styles.moon} href = "/location"> location settings</Link>
+      <View style = {styles.buttonContainer}>
+      <Link style={styles.ButtonStyle} href = "/location">location settings</Link>
+      </View>
     </ScrollView> 
   )
 }
@@ -349,10 +355,54 @@ const styles = StyleSheet.create({
       alignItems: 'flex-start',
       justifyContent: 'flex-start'
     },
+    buttonContainer: {
+      width: "100%",
+      alignItems: "center"
+
+
+    },
     scrollView: {
         flex: 1,
         backgroundColor: 'black',
         
+    },
+    dataLoaded: {
+      fontSize: 22,
+      color: 'white',
+      fontFamily: "Orbitron",
+      letterSpacing: 2,
+      alignItems: 'center'
+    },
+
+    ButtonStyle: {
+      marginTop: 35,
+      width: 250,
+      paddingVertical: 16,
+      borderWidth: 1,
+      borderColor: "white",
+      borderRadius: 3,
+      textAlign: "center",
+      fontFamily: "Orbitron",
+      fontSize: 15,
+      color: "white",
+      letterSpacing: 2,
+
+
+
+
+    },
+
+    buttonText: {
+      fontFamily: "Orbitron",
+      fontSize: 15,
+      color: "white",
+      letterSpacing: 2,
+      textAlign: "center"
+      
+
+
+
+
     },
 
 
