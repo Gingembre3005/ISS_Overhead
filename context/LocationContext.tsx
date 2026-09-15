@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
+import * as Location from "expo-location"
 
 type LocationContextType = {
   latitude: number | null;
   longitude: number | null;
+  address: Location.LocationGeocodedAddress | null;
   setLocation: (latitude: number, longitude: number) => void;
+  setAddress: (address: Location.LocationGeocodedAddress) => void
 };
 
 const LocationContext = createContext<LocationContextType | undefined>(
@@ -13,6 +16,8 @@ const LocationContext = createContext<LocationContextType | undefined>(
 export function LocationProvider({ children }: { children: React.ReactNode }) {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [address, setAddress] = useState<Location.LocationGeocodedAddress | null>(null)
+
 
   const setLocation = (latitude: number, longitude: number) => {
     setLatitude(latitude);
@@ -24,7 +29,9 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
       value={{
         latitude,
         longitude,
+        address,
         setLocation,
+        setAddress,
       }}
     >
       {children}

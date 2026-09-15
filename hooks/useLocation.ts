@@ -6,12 +6,11 @@ import { useLocationContext } from "../context/LocationContext";
 
 
 const useLocation = () => {
-  const { setLocation } = useLocationContext();
+  const { setLocation, setAddress } = useLocationContext();
   const[errorMsg, setErrorMsg] = useState("")
   const [longitude, setLongitude] = useState<number | null>(null);
 const [latitude, setLatitude] = useState<number | null>(null);
-  const [address, setAddress] =
-  useState<Location.LocationGeocodedAddress | null>(null);
+  
   
 
   const getUserLocation = async ()=>{
@@ -40,7 +39,7 @@ const [latitude, setLatitude] = useState<number | null>(null);
 
       })
       if (response.length > 0) {
-    setAddress(response[0]);
+        setAddress(response[0]);
        }
       console.log("USER LOCATION IS",response)
 
@@ -57,7 +56,7 @@ const [latitude, setLatitude] = useState<number | null>(null);
     latitude,
     longitude,
     errorMsg,
-    address, 
+    
     getUserLocation,
 
   }

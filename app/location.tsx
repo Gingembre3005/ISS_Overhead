@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 
 
-import {Pressable, Alert,Keyboard, Button, StyleSheet, Text,TouchableWithoutFeedback, TextInput, View } from 'react-native';
+import {ScrollView, Pressable, Alert,Keyboard, Button, StyleSheet, Text,TouchableWithoutFeedback, TextInput, View } from 'react-native';
 import useLocation from '../hooks/useLocation';
 import { useLocationContext } from "@/context/LocationContext";
 //import { Button } from "@react-navigation/elements";
@@ -14,7 +14,7 @@ export default function LocationScreen() {
   latitude,
   longitude,
   errorMsg,
-  address,
+  
   getUserLocation,
 } = useLocation();
 
@@ -23,6 +23,8 @@ const [longitudeInput, setLongitudeInput] = useState("")
 
 const {latitude: savedLatitude,
        longitude: savedLongitude,
+       address,
+       
        setLocation} = useLocationContext()
 
 const saveManuallLocation = ()=>{
@@ -41,7 +43,11 @@ const [showText, setShowText] = useState(false);
 
 return (
 <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-<View style={styles.container}>
+<ScrollView style={styles.scrollview} contentContainerStyle={styles.container}>
+
+<Text>  </Text>
+<Text>  </Text>
+<Text>  </Text>
       
       
 <Text style={styles.moon}>Actual location:</Text>
@@ -57,7 +63,8 @@ onPress={() => {
 }}>
   <Text style={styles.coolButtonText}>set location automatically</Text>
 </Pressable>
-{showText&&(
+<Text>  </Text>
+{showText&& !address?.country &&(
 <Text style= {styles.moon}>Setting Location, this may take a few seconds</Text>
 )}
 
@@ -88,7 +95,8 @@ onPress={() => {
 
 {address?.streetNumber && (      
 <Text style={styles.moon}>
-  Streetnumber: {address.streetNumber }
+  Streetnumber: {address.streetNumber }  {"\n"}
+  
 </Text>)}
 
 <Text style={styles.moon}>
@@ -134,12 +142,16 @@ onPress={()=>{
 <Link style={styles.ButtonStyle} href = "/"> <Text style={styles.moon}>Back to main screen</Text></Link>
 
 </View>
+<Text>  </Text>
+<Text>  </Text>
+<Text>  </Text>
 
 
 {errorMsg ? (
   <Text style={styles.moon}>{errorMsg}</Text>
 ) : null}
-    </View>
+    
+    </ScrollView>
     </TouchableWithoutFeedback>
   )
 }
@@ -149,7 +161,7 @@ onPress={()=>{
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        
         backgroundColor: 'black',
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
@@ -157,6 +169,10 @@ const styles = StyleSheet.create({
     coolButtonPressed: {
       opacity: 0.5,
       transform: [{ scale: 0.97}],
+    },
+    scrollview: {
+      flex: 1,
+      backgroundColor: "black"
     },
     coolButton: {
       width: 260,

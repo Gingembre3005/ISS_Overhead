@@ -297,6 +297,10 @@ const Index = () => {
   }
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
+      <Text>   </Text>
+      <Text>   </Text>
+      <Text>   </Text>
+      <Text>   </Text>
       
       <Text style={styles.moon}>User coordinates:</Text>
       <Text style={styles.moon}>-------------------</Text>
@@ -346,6 +350,8 @@ Try again in a few hours`
       <View style = {styles.buttonContainer}>
       <Link style={styles.ButtonStyle} href = "/location">location settings</Link>
       </View>
+      <Text>   </Text>
+      <Text>   </Text>
     </ScrollView> 
   )
 }
