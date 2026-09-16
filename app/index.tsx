@@ -1,10 +1,11 @@
 import { Link } from "expo-router";
-import { StyleSheet,ScrollView, Text, View } from 'react-native';
+import { Animated, StyleSheet,ScrollView, Text, View } from 'react-native';
 import * as satelitte from "satellite.js"
 import { useLocationContext } from "../context/LocationContext";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { Orbitron_400Regular, Orbitron_700Bold} from "@expo-google-fonts/orbitron";
 import { useFonts} from "expo-font"
+import * as Notifications from "expo-notifications"
 import { StatusBar } from "expo-status-bar"
 
 const TLE_URL = "https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=TLE";
@@ -25,8 +26,36 @@ const Index = () => {
   const [MaxMaxElevation, setMaxElevation] = useState<number | null>(null)
   const [MaxMaxElevationTime, setMaxElevationTime] = useState<Date | null>(null)
   const [TimeUntilNextPass, setTimeUntilNextPass] = useState<number | null>(null)
-  useEffect(()=>{
+  const notificationId = useRef<string | null>(null)
+
+  const issX = useRef(new Animated.Value(1)).current
+  const issY = useRef(new Animated.Value(0)).current
+  const issProgress = useRef(new Animated.Value(0)).current
+  useEffect(() => {
+    const animation = Animated.loop(
      
+        Animated.timing(issProgress, {
+          toValue: 1,
+          duration: 25000,
+          useNativeDriver: true,
+        }),
+      )
+    animation.start()
+
+    return () => {
+      animation.stop()
+      issProgress.setValue(0)
+    }
+  }, [])
+  useEffect(()=>{
+    async function requestNotificationPermission(){
+      const {status} =  await Notifications.requestPermissionsAsync()
+     
+      if (status !== "granted"){
+        console.log("Notifications permission not granted")
+      }
+    }
+    requestNotificationPermission()
     const getISSData = async () => {
       try {
         const response = await fetch(TLE_URL);
@@ -83,6 +112,30 @@ const Index = () => {
           return
         }
 
+        async function scheduleISSNotification(foundPassStart: Date){
+          if ( notificationId.current !== null){
+            console.log("notification already scheduled", notificationId.current)
+            return
+          }
+          try{
+          const id = await Notifications.scheduleNotificationAsync({
+            content: {
+              title: "ISS Overhead!",
+              body: "The ISS is now in your field of view.",
+            },
+            trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: foundPassStart,
+            },
+          })
+          notificationId.current = id
+          console.log("Notification scheduled:", id)
+          console.log("Notification time:", foundPassStart)
+        }catch (error){
+          console.error("Failed to schedule notification:", error)
+        }
+
+        }
         const getISSElevation = (date: Date) =>{
         const positionAndVelocity = satelitte.propagate(
         satrec,
@@ -141,6 +194,8 @@ const Index = () => {
             }
             previousElevation = currentElevation
         }
+
+        
           let foundPassEnd: Date | null = null
           if(foundPassStart !== null){
          let previousEndElevation = getISSElevation(foundPassStart)
@@ -179,7 +234,9 @@ const Index = () => {
             previousEndElevation = calcElevation
         }
       }
-
+      if (foundPassStart !== null){
+        scheduleISSNotification(foundPassStart)
+      }
       if (foundPassEnd!== null && foundPassStart !== null ){
         let maxElevation = 0
         let maxElevationTime = new Date(foundPassStart.getTime())
@@ -296,10 +353,42 @@ const Index = () => {
     )
   }
   return (
+    <View style={styles.screen}>
+      <Animated.Image 
+      source={require("../assets/images/iss.png")}
+      style={[
+        styles.issBackground,
+        {
+          transform: [
+            {
+              translateX: issProgress.interpolate({
+                inputRange: [0,1],
+                outputRange: [200,-400]
+              })
+              
+            },
+            {
+              translateY: issProgress.interpolate({
+                inputRange: [0,1],
+                outputRange: [0,550],
+              })
+              },
+            {rotate: "-15deg"}
+          ],
+        },
+      ]}
+      />
+      
+      
+      
+      
+    
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
       <Text>   </Text>
       <Text>   </Text>
       <Text>   </Text>
+      <Text>   </Text>
+      <Text style={styles.title}>Main Screen</Text>
       <Text>   </Text>
       
       <Text style={styles.moon}>User coordinates:</Text>
@@ -316,20 +405,20 @@ const Index = () => {
       <Text style={styles.moon}>Informations about next ISS pass:</Text>
       <Text style={styles.moon}>-------------------</Text>
       <Text style={styles.moon}>Start of next ISS pass in: <Text style={styles.countdown}>
-        {hours.toString().padStart(2,"0")}:
+        {"\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"}{hours.toString().padStart(2,"0")}:
         {minutes.toString().padStart(2,"0")}:
         {seconds.toString().padStart(2,"0")}</Text></Text>
       
-      <Text style={styles.moon}>Start of next pass: {
+      <Text style={styles.moon}>Start of next pass:{"\n"}{
       nextPassTime
       ?<Text style={styles.countdown}> {nextPassTime.toLocaleString()} </Text>
       : "calculating..."}</Text>
-      <Text style={styles.moon}>End of next pass:{
+      <Text style={styles.moon}>End of next pass:{"\n"}{
       nextPassTimeEnd
       ?<Text style = {styles.countdown}>{nextPassTimeEnd.toLocaleString()}</Text>
       :"calculating..."}</Text>
       <Text style={styles.moon}>Highest point during pass at: <Text style={styles.countdown}>{MaxMaxElevation?.toFixed(1)}</Text> degrees over the horizon</Text>
-      <Text style = {styles.moon}>Highest point will be reached at: <Text style={styles.countdown}>{MaxMaxElevationTime?.toLocaleString()}</Text></Text>
+      <Text style = {styles.moon}>Highest point will be reached at:{"\n"}    <Text style={styles.countdown}>{MaxMaxElevationTime?.toLocaleString()}</Text></Text>
       <Text>    </Text>
       <Text style={styles.moon}>ISS data status:</Text>
       <Text style={styles.moon}>-------------------</Text>
@@ -353,6 +442,7 @@ Try again in a few hours`
       <Text>   </Text>
       <Text>   </Text>
     </ScrollView> 
+    </View>
   )
 }
 
@@ -369,9 +459,24 @@ const styles = StyleSheet.create({
 
 
     },
+    screen: {
+      flex: 1,
+      backgroundColor: "black",
+    },
+    issBackground: {
+      position: "absolute",
+      width: 180,
+      height: 180,
+      top: 0,
+      right: 0,
+      zIndex: 0,
+      opacity: 0.5,
+      resizeMode: "contain",
+    },
     scrollView: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: 'transparent',
+        zIndex: 1
         
     },
     dataLoaded: {
@@ -421,6 +526,14 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: "Orbitron",
         letterSpacing: 2
+
+    },
+    title: {
+      fontSize: 44,
+      color: 'white',
+      fontFamily: "Orbitron",
+      letterSpacing: 2,
+      textDecorationLine: "underline"
 
     },
     countdown: {

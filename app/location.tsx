@@ -48,6 +48,8 @@ return (
 <Text>  </Text>
 <Text>  </Text>
 <Text>  </Text>
+<Text style={styles.title}>Location Screen</Text>
+<Text>  </Text>
       
       
 <Text style={styles.moon}>Actual location:</Text>
@@ -231,6 +233,13 @@ const styles = StyleSheet.create({
         color: 'white',
         letterSpacing: 2
 
+    },
+    title: {
+      fontFamily: "Orbitron",
+      fontSize: 35,
+      color: "white",
+      letterSpacing: 2,
+      textDecorationLine: "underline"
     },
     attention:{
       fontFamily: "Orbitron",
