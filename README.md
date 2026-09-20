@@ -1,50 +1,27 @@
-# Welcome to your Expo app 👋
+# ISS Overhead
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An app for people interested in knowing when the ISS flies over them.
 
-## Get started
+<img width="946" height="2048" alt="WhatsApp Image 2026-09-16 at 21 48 12" src="https://github.com/user-attachments/assets/a5e908a5-dfc7-45d2-b306-06677ce1743b" />
 
-1. Install dependencies
+## Link to install the app on Android:
 
-   ```bash
-   npm install
-   ```
+https://expo.dev/accounts/gingembre/projects/ISS_Overhead/builds/8b84bff5-f1ea-4c94-83eb-80330b1f1c2e
 
-2. Start the app
+## Quickstart:
 
-   ```bash
-   npx expo start
-   ```
+Install the app on your Android phone. Then in the location window set your location to access all the features.
 
-In the output, you'll find options to open the app in a
+## Features:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+You can see the ISS's current position, if it is in your field of view and when the next pass will take place. It also calculates some data about the next pass like the maximum elevation or time the ISS will be visible.
+The app will also send you a notification the next time a pass happens.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## How to run locally:
 
-## Get a fresh project
+You can start the code with the command "npx expo start".
+You need to have node 24 installed.
 
-When you're ready, run:
+## How it works:
+It runs entirely client side. 
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
