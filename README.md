@@ -23,5 +23,9 @@ You can start the code with the command "npx expo start".
 You need to have node 24 installed.
 
 ## How it works:
+
 It runs entirely client side. 
 
+## Acknowledgements:
+
+AI was used to indetify some bugs. 
